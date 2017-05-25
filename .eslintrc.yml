@@ -1,0 +1,47 @@
+extends: google
+parserOptions:
+  ecmaVersion: 8
+rules:
+  indent:
+    - error
+    - 2
+  max-len:
+    - warn
+    - 100
+    - ignoreStrings: true
+      ignoreTemplateLiterals: true
+      ignoreTrailingComments: true
+  newline-per-chained-call:
+    - warn
+    - ignoreChainWithDepth: 4
+  eqeqeq:
+    - error
+    - smart
+  strict:
+    - error
+    - global
+  block-spacing:
+    - error
+    - always
+  no-lonely-if: error
+  object-curly-spacing:
+    - error
+    - always
+  operator-linebreak:
+    - error
+    - after
+  arrow-spacing: error
+  arrow-parens: off
+  one-var: off
+  space-before-function-paren:
+    - error
+    - anonymous: always
+      named: never
+      asyncArrow: always
+  no-unneeded-ternary: error
+  no-param-reassign: error
+  no-const-assign: error
+  no-invalid-this: off
+  eol-last:
+    - error
+    - always

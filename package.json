@@ -1,0 +1,39 @@
+{
+  "name": "node-base91",
+  "version": "0.1.0",
+  "description": "basE91 codec in pure JavaScript implementation.",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint --fix .",
+    "test": "jest -b --coverage",
+    "benchmark": "node benchmark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Equim-chan/base91.git"
+  },
+  "keywords": [
+    "base91",
+    "encoding",
+    "binary-to-text"
+  ],
+  "author": "Equim",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/Equim-chan/base91/issues"
+  },
+  "homepage": "https://github.com/Equim-chan/base91#readme",
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.1",
+    "jest": "^20.0.4"
+  },
+  "jest": {
+    "testMatch": [
+      "**/test/**/*.js"
+    ]
+  }
+}
