@@ -5,17 +5,19 @@ const crypto = require('crypto');
 
 describe('base91 basic', () => {
   it('should Hello World!', () => {
-    expect(decode(encode('Hello World!')).toString()).toBe('Hello World!');
+    expect(decode(encode('Hello World!'), 'utf8')).toBe('Hello World!');
   });
 
-  it('should check input type', () => {
+  it('should check input type and filter', () => {
     expect(() => encode()).toThrow();
-    expect(() => encode(null)).toThrow();
+    expect(() => encode(null, 'utf8')).toThrow();
+    expect(() => encode('abc', 'zzzzz')).toThrow();
 
     expect(encode('')).toBe('');
     expect(encode(2333)).toEqual(encode('2333'));
     expect(encode(0)).toEqual(encode('0'));
 
+    expect(decode(2333)).toEqual(decode('2333'));
     expect(decode()).toEqual(decode(''));  // instead of 'undefined'
   });
 
@@ -49,9 +51,14 @@ describe('base91 basic', () => {
       '( ͡° ͜ʖ ͡°)',
     ].forEach(p => {
       expect(p).not.toMatch(/^[\x00-\x7F]*$/);
-      const encoded = encode(p);
+
+      let encoded = encode(p);
       expect(encoded).toMatch(/^[\x00-\x7F]*$/);
-      expect(decode(encoded).toString()).toBe(p);
+      expect(decode(encoded, 'utf8')).toBe(p);
+
+      encoded = encode(p, 'ucs2');
+      expect(encoded).toMatch(/^[\x00-\x7F]*$/);
+      expect(decode(encoded)).toEqual(Buffer.from(p, 'ucs2'));
     });
   });
 
@@ -94,7 +101,8 @@ describe('base91 basic', () => {
   it('should skip invalid characters in decoding', () => {
     expect(decode(`qXz'I;W/Hl虚空“T<MnuP n%\n"\\TD”dl(2VK,^]@qU2u   9Mbps5_1rg''-----'BB`))
       .toEqual(decode('qXzI;W/HlT<MnuPn%"TDdl(2VK,^]@qU2u9Mbps5_1rgBB'));
-    expect(decode('   ')).toEqual(decode(''));
+    expect(decode('   '))
+      .toEqual(decode(''));
   });
 });
 
