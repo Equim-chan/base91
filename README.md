@@ -20,14 +20,18 @@ $ npm i --save node-base91
 const base91 = require('node-base91');
 const fs = require('fs');
 
-// accept utf8 string
+// accept string with utf8 encoding by default
 const encodedText = base91.encode('Hello World!');
 console.log(encodedText);  //=> >OwJh>Io0Tv!8PE
+
+// accept string with specified encoding
+const encodedUnicodeText = base91.encode('Hello World!', 'ucs2');
+console.log(encodedUnicodeText);  //=> .AoE~l*hy(bAgA;DDn6yF"NAyA&AA
 
 // accept Buffer
 const encodedFile = base91.encode(fs.readFileSync('sayaka.jpg'));
 
-// convert from hex into base91
+// convert hex into base91
 const encodedHash = base91.encode('ecfbfc2754db0c408223fa7917116867420ef60d', 'hex');
 console.log(encodedHash);  //=> y>)~Q7e.XL{xWWXI#WJ2CKy>A
 ```
@@ -36,8 +40,17 @@ console.log(encodedHash);  //=> y>)~Q7e.XL{xWWXI#WJ2CKy>A
 ```js
 const base91 = require('node-base91');
 
-const decoded = base91.decode('>OwJh>Io0Tv!8PE');
-console.log(decoded.toString('utf8'));  //=> Hello World!
+// with `encoding`, `decode` will return a string
+const decodedText = base91.decode('>OwJh>Io0Tv!8PE', 'utf8');
+console.log(decodedText);  //=> Hello World!
+
+// without `encoding`, `decode` will return a buffer
+const decodedBuffer = base91.decode('>OwJh>Io0Tv!8PE');
+console.log(decodedBuffer);  //=> <Buffer 48 65 6c 6c 6f 20 57 6f 72 6c 64 21>
+
+// convert base91 into hex
+const decodedHash = base91.decode('y>)~Q7e.XL{xWWXI#WJ2CKy>A', 'hex');
+console.log(decodedHash);  //=> ecfbfc2754db0c408223fa7917116867420ef60d
 ```
 
 ## API
@@ -48,7 +61,7 @@ console.log(decoded.toString('utf8'));  //=> Hello World!
 
 ### decode(data[, encoding])
 * data (`String`) - basE91 string to be decoded.
-* encoding - The encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
+* encoding - The string encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
 * returns (`String` | `Buffer`) - Decoded buffer or string.
 
 ## Test

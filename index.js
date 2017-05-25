@@ -62,7 +62,7 @@ exports.encode = (data, encoding = 'utf8') => {
  * Decode basE91 string into Buffer or String.
  *
  * @param  {String} data - data to be decoded
- * @param  {String} encoding - the encoding of decoded data. If this argument
+ * @param  {String} encoding - the string encoding of decoded data. If this argument
  *                             is not specified, it will return a `Buffer`.
  * @return {String | Buffer} - decoded data
  * @api public
