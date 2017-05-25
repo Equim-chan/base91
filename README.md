@@ -53,8 +53,8 @@ $ npm run benchmark
 My result:
 ```
 Tested with Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz x4 under win32 x64 10.0.15063
-Avg basE91 encode speed: 7,807.844 KB/s
-Avg basE91 decode speed: 2,749.869 KB/s
+Avg basE91 encode speed: 8,594.35 KB/s
+Avg basE91 decode speed: 2,962.595 KB/s
 ```
 
 ## TODO
