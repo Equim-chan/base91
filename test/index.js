@@ -64,6 +64,33 @@ describe('base91 basic', () => {
     }
   });
 
+  it('should handle specified encoding', () => {
+    for (let i = 0; i < 25; i++) {
+      const raw = crypto.randomBytes(Math.random() * 1000 | 0);
+      const encoded = encode(raw.toString('base64'), 'base64');
+      expect(encoded).toMatch(/^[\x00-\x7F]*$/);
+      expect(decode(encoded)).toEqual(raw);
+    }
+    for (let i = 0; i < 25; i++) {
+      const raw = crypto.randomBytes(Math.random() * 1000 | 0);
+      const encoded = encode(raw.toString('base64'), 'base64');
+      expect(encoded).toMatch(/^[\x00-\x7F]*$/);
+      expect(decode(encoded, 'hex')).toBe(raw.toString('hex'));
+    }
+    for (let i = 0; i < 25; i++) {
+      const raw = crypto.randomBytes(Math.random() * 1000 | 0);
+      const encoded = encode(raw.toString('hex'), 'hex');
+      expect(encoded).toMatch(/^[\x00-\x7F]*$/);
+      expect(decode(encoded)).toEqual(raw);
+    }
+    for (let i = 0; i < 25; i++) {
+      const raw = crypto.randomBytes(Math.random() * 1000 | 0);
+      const encoded = encode(raw.toString('hex'), 'hex');
+      expect(encoded).toMatch(/^[\x00-\x7F]*$/);
+      expect(decode(encoded, 'base64')).toBe(raw.toString('base64'));
+    }
+  });
+
   it('should skip invalid characters in decoding', () => {
     expect(decode(`qXz'I;W/Hl虚空“T<MnuP n%\n"\\TD”dl(2VK,^]@qU2u   9Mbps5_1rg''-----'BB`))
       .toEqual(decode('qXzI;W/HlT<MnuPn%"TDdl(2VK,^]@qU2u9Mbps5_1rgBB'));

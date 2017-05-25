@@ -18,27 +18,38 @@ $ npm i --save node-base91
 ### Encoding
 ```js
 const base91 = require('node-base91');
+const fs = require('fs');
 
-const encoded = base91.encode('Hello World!');
-console.log(encoded);  // >OwJh>Io0Tv!8PE
+// accept utf8 string
+const encodedText = base91.encode('Hello World!');
+console.log(encodedText);  //=> >OwJh>Io0Tv!8PE
+
+// accept Buffer
+const encodedFile = base91.encode(fs.readFileSync('sayaka.jpg'));
+
+// convert from hex into base91
+const encodedHash = base91.encode('ecfbfc2754db0c408223fa7917116867420ef60d', 'hex');
+console.log(encodedHash);  //=> y>)~Q7e.XL{xWWXI#WJ2CKy>A
 ```
 
 ### Decoding
 ```js
 const base91 = require('node-base91');
 
-const decoded = base91.decode('Jo9Kc)qCH$/xaxHl3o=Cq/6Y%y|u=EuiKBs3O:FZ<R4tM.kL5D^g66nNxS*/{B[p^iwJL,&elTR;axLmeBMf,W?NxS,/},kLxo>vm)UI97?+5E{ouA');
-console.log(decoded.toString('utf8'));  // Any application that can be written in JavaScript, will eventually be written in JavaScript.
+const decoded = base91.decode('>OwJh>Io0Tv!8PE');
+console.log(decoded.toString('utf8'));  //=> Hello World!
 ```
 
 ## API
-### encode(data)
-* data (`String` | `Buffer`) - data to be encoded, if it is a `String`, it will be casted into `Buffer` with utf-8 encoding automatically.
+### encode(data[, encoding = 'utf8'])
+* data (`String` | `Buffer`) - Data to be encoded, can be either `String` or `Buffer`.
+* encoding - The encoding of `data` string. Default: `'utf8'`. This argument is ignored when `data` is already a `Buffer`.
 * returns (`String`) - basE91 encoded string.
 
-### decode(data)
+### decode(data[, encoding])
 * data (`String`) - basE91 string to be decoded.
-* returns (`Buffer`) - decoded buffer.
+* encoding - The encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
+* returns (`String` | `Buffer`) - Decoded buffer or string.
 
 ## Test
 ```bash
