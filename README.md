@@ -7,11 +7,13 @@
 
 basE91 codec implemented in pure JavaScript.
 
-It is migrated from the C and PHP version of Joachim Henke's [basE91](http://base91.sourceforge.net/)
+Migrated from the C and PHP version of Joachim Henke's [basE91](http://base91.sourceforge.net/).
 
 ## Installation
 ```bash
 $ npm i --save node-base91
+# Or
+$ yarn add node-base91
 ```
 
 ## Usage
@@ -56,29 +58,47 @@ console.log(decodedHash);  //=> ecfbfc2754db0c408223fa7917116867420ef60d
 ## API
 ### encode(data[, encoding = 'utf8'])
 * data (`String` | `Buffer`) - Data to be encoded, can be either `String` or `Buffer`.
-* encoding - The encoding of `data` string. Default: `'utf8'`. This argument is ignored when `data` is already a `Buffer`.
+* encoding (`String`) - The encoding of `data` string. Default: `'utf8'`. This argument is ignored when `data` is already a `Buffer`.
 * returns (`String`) - basE91 encoded string.
 
 ### decode(data[, encoding])
 * data (`String`) - basE91 string to be decoded.
-* encoding - The string encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
+* encoding (`String`) - The string encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
 * returns (`String` | `Buffer`) - Decoded buffer or string.
 
 ## Test
 ```bash
 $ npm test
+# Or
+$ yarn test
 ```
 
 ## Benchmark
 ```bash
 $ npm run benchmark
+# Or
+$ yarn run benchmark
 ```
 
 My result:
 ```
+$ node benchmark
+[control group] dataGen 1KB x 40,423 ops/sec ±6.05% (73 runs sampled)
+basE91 encoding 1KB x 9,622 ops/sec ±6.69% (77 runs sampled)
+basE91 decoding 1KB x 2,331 ops/sec ±1.80% (87 runs sampled)
+[control group] dataGen 512KB x 105 ops/sec ±2.27% (76 runs sampled)
+basE91 encoding 512KB x 10.57 ops/sec ±8.06% (29 runs sampled)
+basE91 decoding 512KB x 3.56 ops/sec ±7.38% (13 runs sampled)
+[control group] dataGen 1MB x 49.04 ops/sec ±3.65% (62 runs sampled)
+basE91 encoding 1MB x 4.32 ops/sec ±7.59% (16 runs sampled)
+basE91 decoding 1MB x 1.54 ops/sec ±8.93% (8 runs sampled)
+[control group] dataGen 4MB x 12.14 ops/sec ±6.25% (32 runs sampled)
+basE91 encoding 4MB x 0.63 ops/sec ±19.91% (6 runs sampled)
+basE91 decoding 4MB x 0.39 ops/sec ±11.51% (6 runs sampled)
+=============================================
 Tested with Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz x4 under win32 x64 10.0.15063
-Avg basE91 encode speed: 8,594.35 KB/s
-Avg basE91 decode speed: 2,962.595 KB/s
+Avg basE91 encode speed: 6,549.076 KB/s
+Avg basE91 decode speed: 3,097.487 KB/s
 ```
 
 ## TODO
