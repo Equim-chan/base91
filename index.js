@@ -21,7 +21,7 @@ const table = [
  */
 exports.encode = (data, encoding = 'utf8') => {
   if (data == null) {
-    throw new Error('Missing argument');
+    throw new Error('base91: Missing data to encode.');
   }
   const raw = Buffer.isBuffer(data) ? data :
     typeof data === 'number' ? Buffer.from(data.toString(), encoding) :
@@ -59,9 +59,9 @@ exports.encode = (data, encoding = 'utf8') => {
 };
 
 /**
- * Decode basE91 string into Buffer or String.
+ * Decode basE91 string into `Buffer` or `String`.
  *
- * @param  {String} data - data to be decoded
+ * @param  {String} data - basE91 string to be decoded
  * @param  {String} encoding - the string encoding of decoded data. If this argument
  *                             is not specified, it will return a `Buffer`.
  * @return {String | Buffer} - decoded data

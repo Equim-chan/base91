@@ -1,6 +1,6 @@
 {
   "name": "node-base91",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "basE91 codec in pure JavaScript implementation.",
   "files": [
     "index.js"
