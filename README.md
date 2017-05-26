@@ -55,6 +55,33 @@ const decodedHash = base91.decode('y>)~Q7e.XL{xWWXI#WJ2CKy>A', 'hex');
 console.log(decodedHash);  //=> ecfbfc2754db0c408223fa7917116867420ef60d
 ```
 
+### Stream
+```js
+const base91 = require('node-base91');
+const fs = require('fs');
+
+// encoding
+fs
+  .createReadStream('package.json')
+  .pipe(new base91.EncodeStream())
+  .pipe(fs.createWriteStream('package.json.base91'))
+  .on('close', () => {
+    console.log(fs.readFileSync('package.json.base91', 'utf8'))
+    //=> sd:CAYEIW$iwyCAMlref_f,Hb%&@8YvPM"^Xxp)z7gg .......
+
+    // decoding
+    fs
+      .createReadStream('package.json.base91')
+      .pipe(new base91.DecodeStream())
+      .pipe(fs.createWriteStream('package.json.decoded'))
+      .on('close', () => {
+        const origin = fs.readFileSync('package.json')
+        const deEncoded = fs.readFileSync('package.json.decoded');
+        console.log(Buffer.compare(origin, deEncoded) === 0); //=> true
+      });
+  });
+```
+
 ## API
 ### encode(data[, encoding = 'utf8'])
 * data (`String` | `Buffer`) - Data to be encoded, can be either `String` or `Buffer`.
@@ -100,9 +127,6 @@ Tested with Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz x4 under win32 x64 10.0.150
 Avg basE91 encode speed: 6,549.076 KB/s
 Avg basE91 decode speed: 3,097.487 KB/s
 ```
-
-## TODO
-* [ ] Support for stream.
 
 ## License
 [BSD 3-clause](https://github.com/Equim-chan/base91/blob/master/LICENSE)

@@ -1,7 +1,8 @@
 'use strict';
 
-const { encode, decode } = require('..');
+const { encode, decode, EncodeStream, DecodeStream } = require('..');
 const crypto = require('crypto');
+const fs = require('fs');
 
 describe('base91 basic', () => {
   it('should Hello World!', () => {
@@ -106,5 +107,114 @@ describe('base91 basic', () => {
   });
 });
 
-describe.skip('base91 stream', () => {
+describe('base91 stream', () => {
+  it('should Hello World!', (done) => {
+    const es = new EncodeStream();
+    const ds = new DecodeStream();
+    let ret = '';
+
+    es
+      .pipe(ds)
+      .on('data', (chunk) => ret += chunk.toString())
+      .on('end', () => {
+        expect(ret).toBe('Hello World!');
+        done();
+      });
+
+    es.write('Hello');
+    es.write(' ');
+    es.end('World!');
+  });
+
+  it('should handle file streams', (done) => {
+    const es = new EncodeStream();
+    const ds = new DecodeStream();
+
+    fs
+      .createReadStream('package.json')
+      .pipe(es)
+      .pipe(ds)
+      .pipe(fs.createWriteStream('package.json.base91'))
+      .on('close', () => {
+        const inFile = fs.readFileSync('package.json');
+        const outFile = fs.readFileSync('package.json.base91');
+        fs.unlinkSync('package.json.base91');
+        expect(inFile).toEqual(outFile);
+        done();
+      });
+  });
+
+  it('should encode correctly', (done) => {
+    const es = new EncodeStream();
+    let ret = '';
+
+    const expectedEncoded = encode(fs.readFileSync('README.md'));
+
+    fs
+      .createReadStream('README.md')
+      .pipe(es)
+      .on('data', (chunk) => ret += chunk)
+      .on('end', () => {
+        expect(ret).toBe(expectedEncoded);
+        done();
+      });
+  });
+
+  it('should decode correctly', (done) => {
+    const ds = new DecodeStream();
+    const ret = [];
+
+    const expectedDecoded = fs.readFileSync('index.js');
+
+    ds
+      .on('data', (chunk) => ret.push(chunk))
+      .on('end', () => {
+        expect(Buffer.concat(ret)).toEqual(expectedDecoded);
+        done();
+      });
+
+    const encoded = encode(fs.readFileSync('index.js'));
+    ds.end(encoded);
+  });
+
+  it('should handle empty stream', async () => Promise.all([
+    new Promise((resolve, reject) => {
+      const es = new EncodeStream();
+      let ret = '';
+      es
+        .on('data', (chunk) => ret += chunk)
+        .on('error', reject)
+        .on('end', () => {
+          expect(ret).toBe('');
+          resolve();
+        })
+        .end();
+    }),
+    new Promise((resolve, reject) => {
+      const ds = new DecodeStream();
+      const ret = [];
+      ds
+        .on('data', (chunk) => dsRet.push(chunk))
+        .on('error', reject)
+        .on('end', () => {
+          expect(Buffer.concat(ret)).toEqual(Buffer.from(''));
+          resolve();
+        })
+        .end();
+    }),
+  ]));
+
+  it('should skip invalid characters in decoding', (done) => {
+    const ds = new DecodeStream();
+    const ret = [];
+
+    ds
+      .on('data', (chunk) => ret.push(chunk))
+      .on('end', () => {
+        expect(Buffer.concat(ret)).toEqual(decode('qXzI;W/HlT<MnuPn%"TDdl(2VK,^]@qU2u9Mbps5_1rgBB'));
+        done();
+      });
+
+    ds.end(`qXz'I;W/Hl虚空“T<MnuP n%\n"\\TD”dl(2VK,^]@qU2u   9Mbps5_1rg''-----'BB`);
+  });
 });

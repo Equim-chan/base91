@@ -1,5 +1,7 @@
 'use strict';
 
+const { Transform } = require('stream');
+
 const table = [
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
   'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -58,6 +60,59 @@ exports.encode = (data, encoding = 'utf8') => {
   return ret;
 };
 
+exports.EncodeStream = class extends Transform {
+  /**
+   * constructor
+   * @param  {Object} opt - passed to `new stream.Transform`
+   */
+  constructor(opt) {
+    super(opt);
+
+    this.setEncoding('utf8');
+    this._n = this._b = 0;
+  }
+
+  /**
+   * implemented `transform._transform`
+   * @param  {String | Buffer} chunk - inherited from `transform._transform`
+   * @param  {String} encoding - inherited from `transform._transform`
+   * @param  {Function} cb - inherited from `transform._transform`
+   */
+  _transform(chunk, encoding, cb) {
+    const raw = Buffer.from(chunk, encoding);
+    for (let i = 0; i < raw.length; i++) {
+      this._b |= raw[i] << this._n;
+      this._n += 8;
+
+      if (this._n > 13) {
+        let v = this._b & 8191;
+        if (v > 88) {
+          this._b >>= 13;
+          this._n -= 13;
+        } else {
+          v = this._b & 16383;
+          this._b >>= 14;
+          this._n -= 14;
+        }
+        this.push(table[v % 91] + table[v / 91 | 0]);
+      }
+    }
+    cb();
+  }
+
+  /**
+   * implemented ` transform._flush`
+   * @param  {Function} cb - inherited from `transform._flush`
+   */
+  _flush(cb) {
+    if (this._n) {
+      this.push(table[this._b % 91]);
+      if (this._n > 7 || this._b > 90) this.push(table[this._b / 91 | 0]);
+    }
+    cb();
+  }
+};
+
 /**
  * Decode basE91 string into `Buffer` or `String`.
  *
@@ -105,4 +160,57 @@ exports.decode = (data, encoding) => {
   return encoding == null ?
     Buffer.from(ret) :
     Buffer.from(ret).toString(encoding);
+};
+
+exports.DecodeStream = class extends Transform {
+  /**
+   * constructor
+   * @param  {Object} opt - passed to `new stream.Transform`
+   */
+  constructor(opt) {
+    super(opt);
+
+    // this.setDefaultEncoding('utf8');
+    this._b = this._n = 0;
+    this._v = -1;
+  }
+
+  /**
+   * implemented `transform._transform`
+   * @param  {String | Buffer} chunk - inherited from `transform._transform`
+   * @param  {String} encoding - inherited from `transform._transform`
+   * @param  {Function} cb - inherited from `transform._transform`
+   */
+  _transform(chunk, encoding, cb) {
+    const raw = chunk.toString();
+    for (let i = 0; i < raw.length; i++) {
+      const p = table.indexOf(raw[i]);
+      if (p === -1) continue;
+      if (this._v < 0) {
+        this._v = p;
+      } else {
+        this._v += p * 91;
+        this._b |= this._v << this._n;
+        this._n += (this._v & 8191) > 88 ? 13 : 14;
+        do {
+          this.push(Buffer.from([this._b & 0xff]));
+          this._b >>= 8;
+          this._n -= 8;
+        } while (this._n > 7);
+        this._v = -1;
+      }
+    }
+    cb();
+  }
+
+  /**
+   * implemented ` transform._flush`
+   * @param  {Function} cb - inherited from `transform._flush`
+   */
+  _flush(cb) {
+    if (this._v > -1) {
+      this.push(Buffer.from([(this._b | this._v << this._n) & 0xff]));
+    }
+    cb();
+  }
 };
