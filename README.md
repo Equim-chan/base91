@@ -66,7 +66,7 @@ fs
   .pipe(new base91.EncodeStream())
   .pipe(fs.createWriteStream('package.json.base91'))
   .on('close', () => {
-    console.log(fs.readFileSync('package.json.base91', 'utf8'))
+    console.log(fs.readFileSync('package.json.base91', 'utf8'));
     //=> sd:CAYEIW$iwyCAMlref_f,Hb%&@8YvPM"^Xxp)z7gg .......
 
     // decoding
@@ -75,7 +75,7 @@ fs
       .pipe(new base91.DecodeStream())
       .pipe(fs.createWriteStream('package.json.decoded'))
       .on('close', () => {
-        const origin = fs.readFileSync('package.json')
+        const origin = fs.readFileSync('package.json');
         const deEncoded = fs.readFileSync('package.json.decoded');
         console.log(Buffer.compare(origin, deEncoded) === 0); //=> true
       });
@@ -92,6 +92,14 @@ fs
 * data (`String`) - basE91 string to be decoded.
 * encoding (`String`) - The string encoding of decoded data. If `encoding` is not specified, it will return a `Buffer`.
 * returns (`String` | `Buffer`) - Decoded buffer or string.
+
+### new EncodeStream([opt])
+* opt (`Object`) - Options are passed to [`new stream.Transform`](https://nodejs.org/dist/latest-v7.x/docs/api/stream.html#stream_new_stream_transform_options)
+* returns (`EncodeStream`) - Stream encoder.
+
+### new DecodeStream([opt])
+* opt (`Object`) - Options are passed to [`new stream.Transform`](https://nodejs.org/dist/latest-v7.x/docs/api/stream.html#stream_new_stream_transform_options)
+* returns (`DecodeStream`) - Stream decoder.
 
 ## Test
 ```bash
