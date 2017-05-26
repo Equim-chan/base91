@@ -1,7 +1,9 @@
 {
   "name": "node-base91",
-  "version": "0.3.0",
   "description": "basE91 codec in pure JavaScript implementation.",
+  "version": "0.3.0",
+  "author": "Equim <sayaka@ekyu.moe>",
+  "license": "BSD-3-Clause",
   "files": [
     "index.js"
   ],
@@ -19,8 +21,6 @@
     "encoding",
     "binary-to-text"
   ],
-  "author": "Equim",
-  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Equim-chan/base91/issues"
   },

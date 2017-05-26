@@ -123,7 +123,8 @@ describe('base91 stream', () => {
 
     es.write('Hello');
     es.write(' ');
-    es.end('World!');
+    es.write('World');
+    es.end('!');
   });
 
   it('should handle file streams', (done) => {

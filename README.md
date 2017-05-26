@@ -31,7 +31,7 @@ const encodedUnicodeText = base91.encode('Hello World!', 'ucs2');
 console.log(encodedUnicodeText);  //=> .AoE~l*hy(bAgA;DDn6yF"NAyA&AA
 
 // accept Buffer
-const encodedFile = base91.encode(fs.readFileSync('sayaka.jpg'));
+const encodedFile = base91.encode(fs.readFileSync('../../sayaka.jpg'));
 
 // convert hex into base91
 const encodedHash = base91.encode('ecfbfc2754db0c408223fa7917116867420ef60d', 'hex');
@@ -118,23 +118,23 @@ $ yarn run benchmark
 My result:
 ```
 $ node benchmark
-[control group] dataGen 1KB x 40,423 ops/sec ±6.05% (73 runs sampled)
-basE91 encoding 1KB x 9,622 ops/sec ±6.69% (77 runs sampled)
-basE91 decoding 1KB x 2,331 ops/sec ±1.80% (87 runs sampled)
-[control group] dataGen 512KB x 105 ops/sec ±2.27% (76 runs sampled)
-basE91 encoding 512KB x 10.57 ops/sec ±8.06% (29 runs sampled)
-basE91 decoding 512KB x 3.56 ops/sec ±7.38% (13 runs sampled)
-[control group] dataGen 1MB x 49.04 ops/sec ±3.65% (62 runs sampled)
-basE91 encoding 1MB x 4.32 ops/sec ±7.59% (16 runs sampled)
-basE91 decoding 1MB x 1.54 ops/sec ±8.93% (8 runs sampled)
-[control group] dataGen 4MB x 12.14 ops/sec ±6.25% (32 runs sampled)
-basE91 encoding 4MB x 0.63 ops/sec ±19.91% (6 runs sampled)
-basE91 decoding 4MB x 0.39 ops/sec ±11.51% (6 runs sampled)
+[control group] dataGen 1KB x 48,643 ops/sec ±1.91% (84 runs sampled)
+basE91 encoding 1KB x 11,941 ops/sec ±1.71% (85 runs sampled)
+basE91 decoding 1KB x 3,238 ops/sec ±1.73% (89 runs sampled)
+[control group] dataGen 512KB x 112 ops/sec ±1.54% (79 runs sampled)
+basE91 encoding 512KB x 12.06 ops/sec ±2.12% (34 runs sampled)
+basE91 decoding 512KB x 4.91 ops/sec ±4.12% (17 runs sampled)
+[control group] dataGen 1MB x 55.31 ops/sec ±1.98% (69 runs sampled)
+basE91 encoding 1MB x 5.19 ops/sec ±4.21% (17 runs sampled)
+basE91 decoding 1MB x 2.19 ops/sec ±6.36% (10 runs sampled)
+[control group] dataGen 4MB x 12.78 ops/sec ±6.12% (35 runs sampled)
+basE91 encoding 4MB x 1.05 ops/sec ±10.33% (7 runs sampled)
+basE91 decoding 4MB x 0.43 ops/sec ±9.71% (6 runs sampled)
 =============================================
 Tested with Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz x4 under win32 x64 10.0.15063
-Avg basE91 encode speed: 6,549.076 KB/s
-Avg basE91 decode speed: 3,097.487 KB/s
+Avg basE91 encode speed: 8,327.687 KB/s
+Avg basE91 decode speed: 3,887.838 KB/s
 ```
 
 ## License
-[BSD 3-clause](https://github.com/Equim-chan/base91/blob/master/LICENSE)
+[BSD-3-clause](https://github.com/Equim-chan/base91/blob/master/LICENSE)
