@@ -57,7 +57,8 @@ exports.EncodeStream = class extends Transform {
    * constructor
    * @param  {Object} opt - passed to `new stream.Transform`
    */
-  constructor(opt) {
+  constructor(opt = {}) {
+    opt.decodeStrings = true;  // force `chunk` in `_transform` to be a `Buffer`
     super(opt);
 
     this.setEncoding('utf8');
@@ -66,14 +67,13 @@ exports.EncodeStream = class extends Transform {
 
   /**
    * implemented `transform._transform`
-   * @param  {String | Buffer} chunk - inherited from `transform._transform`
-   * @param  {String} encoding - inherited from `transform._transform`
+   * @param  {Buffer} chunk - inherited from `transform._transform`
+   * @param  {String} encoding - inherited from `transform._transform`, ignored in this case
    * @param  {Function} cb - inherited from `transform._transform`
    */
   _transform(chunk, encoding, cb) {
-    const raw = Buffer.from(chunk, encoding);
-    for (let i = 0; i < raw.length; i++) {
-      this._b |= raw[i] << this._n;
+    for (let i = 0; i < chunk.length; i++) {
+      this._b |= chunk[i] << this._n;
       this._n += 8;
 
       if (this._n > 13) {
@@ -155,24 +155,23 @@ exports.DecodeStream = class extends Transform {
    * constructor
    * @param  {Object} opt - passed to `new stream.Transform`
    */
-  constructor(opt) {
+  constructor(opt = {}) {
+    opt.decodeStrings = false;  // force `chunk` in `_transform` to be a `String`
     super(opt);
 
-    // this.setDefaultEncoding('utf8');
     this._b = this._n = 0;
     this._v = -1;
   }
 
   /**
    * implemented `transform._transform`
-   * @param  {String | Buffer} chunk - inherited from `transform._transform`
-   * @param  {String} encoding - inherited from `transform._transform`
+   * @param  {String} chunk - inherited from `transform._transform`
+   * @param  {String} encoding - inherited from `transform._transform`, ignored in this case
    * @param  {Function} cb - inherited from `transform._transform`
    */
   _transform(chunk, encoding, cb) {
-    const raw = chunk.toString();
-    for (let i = 0; i < raw.length; i++) {
-      const p = table.indexOf(raw[i]);
+    for (let i = 0; i < chunk.length; i++) {
+      const p = table.indexOf(chunk[i]);
       if (p === -1) continue;
       if (this._v < 0) {
         this._v = p;
