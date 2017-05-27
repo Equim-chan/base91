@@ -3,6 +3,7 @@
 [![Build Status](https://img.shields.io/travis/Equim-chan/base91.svg?style=flat)](https://travis-ci.org/Equim-chan/base91)
 [![Coverage Status](https://img.shields.io/coveralls/Equim-chan/base91.svg?style=flat)](https://coveralls.io/github/Equim-chan/base91?branch=master)
 [![Codacy Badge](https://img.shields.io/codacy/grade/9f4a3b6990134a7b9c5fe099dfb41bcd.svg?style=flat)](https://www.codacy.com/app/Equim-chan/base91)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 [![license](https://img.shields.io/npm/l/node-base91.svg?style=flat)](https://github.com/Equim-chan/base91/blob/master/LICENSE)
 
 basE91 codec implemented in pure JavaScript.

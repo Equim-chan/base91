@@ -57,8 +57,7 @@ exports.EncodeStream = class extends Transform {
    * constructor
    * @param  {Object} opt - passed to `new stream.Transform`
    */
-  constructor(opt = {}) {
-    opt.decodeStrings = true;  // force `chunk` in `_transform` to be a `Buffer`
+  constructor(opt) {
     super(opt);
 
     this.setEncoding('utf8');
@@ -67,11 +66,12 @@ exports.EncodeStream = class extends Transform {
 
   /**
    * implemented `transform._transform`
-   * @param  {Buffer} chunk - inherited from `transform._transform`
+   * @param  {Buffer | String} chunk - inherited from `transform._transform`
    * @param  {String} encoding - inherited from `transform._transform`, ignored in this case
    * @param  {Function} cb - inherited from `transform._transform`
    */
   _transform(chunk, encoding, cb) {
+    // assert chunk is `Buffer`
     for (let i = 0; i < chunk.length; i++) {
       this._b |= chunk[i] << this._n;
       this._n += 8;
@@ -145,9 +145,9 @@ exports.decode = (data, encoding) => {
     ret.push((b | v << n) & 0xff);
   }
 
-  return encoding == null ?
-    Buffer.from(ret) :
-    Buffer.from(ret).toString(encoding);
+  return encoding ?
+    Buffer.from(ret).toString(encoding) :
+    Buffer.from(ret);
 };
 
 exports.DecodeStream = class extends Transform {
@@ -155,8 +155,7 @@ exports.DecodeStream = class extends Transform {
    * constructor
    * @param  {Object} opt - passed to `new stream.Transform`
    */
-  constructor(opt = {}) {
-    opt.decodeStrings = false;  // force `chunk` in `_transform` to be a `String`
+  constructor(opt) {
     super(opt);
 
     this._b = this._n = 0;
@@ -165,13 +164,14 @@ exports.DecodeStream = class extends Transform {
 
   /**
    * implemented `transform._transform`
-   * @param  {String} chunk - inherited from `transform._transform`
+   * @param  {Buffer | String} chunk - inherited from `transform._transform`
    * @param  {String} encoding - inherited from `transform._transform`, ignored in this case
    * @param  {Function} cb - inherited from `transform._transform`
    */
   _transform(chunk, encoding, cb) {
-    for (let i = 0; i < chunk.length; i++) {
-      const p = table.indexOf(chunk[i]);
+    const raw = chunk.toString();
+    for (let i = 0; i < raw.length; i++) {
+      const p = table.indexOf(raw[i]);
       if (p === -1) continue;
       if (this._v < 0) {
         this._v = p;
