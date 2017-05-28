@@ -117,7 +117,7 @@ exports.EncodeStream = class extends Transform {
 exports.decode = (data, encoding) => {
   const raw = '' + (data || '');
   const len = raw.length;
-  let ret = [];
+  const ret = [];
 
   let b = 0;
   let n = 0;
