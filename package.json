@@ -1,7 +1,7 @@
 {
   "name": "node-base91",
   "description": "basE91 codec in pure JavaScript implementation.",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "author": "Equim <sayaka@ekyu.moe>",
   "license": "BSD-3-Clause",
   "files": [
