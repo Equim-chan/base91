@@ -10,6 +10,8 @@ basE91 codec implemented in pure JavaScript.
 
 Migrated from the C and PHP version of Joachim Henke's [basE91](http://base91.sourceforge.net/).
 
+[Golang version](https://github.com/Equim-chan/base91-go)
+
 ## Installation
 ```bash
 $ npm i --save node-base91
